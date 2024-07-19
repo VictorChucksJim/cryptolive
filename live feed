@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Price Monitor</title>
+</head>
+<body>
+    <h1>Token Live Price</h1>
+    <div id="price">Loading...</div>
+
+    <script>
+        const apiKey = '6fba4b4d-d9f1-4f02-8bde-f7b56c27d85a';
+        const symbol = 'BTC';
+        const convert = 'USD';
+
+        async function fetchPrice() {
+            try {
+                const response = await fetch(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${symbol}&convert=${convert}`, {
+                    headers: {
+                        'X-CMC_PRO_API_KEY': apiKey
+                    }
+                });
+                const data = await response.json();
+                const price = data.data[symbol].quote[convert].price;
+                document.getElementById('price').innerText = `$${price.toFixed(2)}`;
+            } catch (error) {
+                document.getElementById('price').innerText = 'Error fetching price';
+                console.error('Error:', error);
+            }
+        }
+
+        setInterval(fetchPrice, 60000); // Fetch price every 60 seconds
+        fetchPrice(); // Initial fetch
+    </script>
+</body>
+</html>
